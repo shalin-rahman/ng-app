@@ -18,5 +18,5 @@ CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "4200"]
 
 
 # docker build -t ng-api-app2:1.2 .
-# docker run -d -p 4200:4201 --name test-api-app-ng-serve ng-api-app2:1.2
+# ocker run -d -p 4200:4200 --name test-api-app-ng-serve ng-api-app2:1.2
 # docker exec -it test-api-app-ng-serve sh
