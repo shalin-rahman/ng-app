@@ -1,39 +1,22 @@
 # Step 1: Build the Angular application using Node.js
-FROM node:20.14.0 AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
-
-# Copy package.json and package-lock.json for npm install
-COPY package*.json .
-
-# Install dependencies
-RUN npm install
 
 # Copy the rest of the Angular app
 COPY . .
 
-# Build the Angular app for production
-RUN npm run build -- --configuration production
+RUN npm install -g @angular/cli
 
-# Check the location of the dist folder and list its contents
-RUN echo "Dist folder location:" && ls -l /app/dist || echo "Dist folder is missing!" && \
-    echo "Contents of /app:" && ls -l /app || echo "/app directory is empty!" && \
-    echo "Contents of /app/dist/ng-api-app:" && ls -l /app/dist/ng-api-app || echo "ng-api-app folder is missing or empty!"
+RUN npm install
 
-# Use NGINX to serve the application
-FROM nginx:alpine  AS build-server
+# Expose the development server port
+EXPOSE 4200
 
-RUN chmod -R 755 /usr/share/nginx/html
+# Serve the Angular app in development mode
+CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "4200"]
 
-# Copy the build output from the build stage to NGINX's web directory
-COPY --from=build /app/dist/ng-api-app /usr/share/nginx/html/
 
-# Expose port 80 to the host
-EXPOSE 80
-
-# Start NGINX
-CMD ["nginx", "-g", "daemon off;"]
-
-# docker build -t ng-api-app:1.1 .
-# docker run -d -p 8080:80 --name test-api-app ng-api-app:1.1
-# docker exec -it test-api-app sh
+# docker build -t ng-api-app2:1.2 .
+# docker run -d -p 4200:4201 --name test-api-app-ng-serve ng-api-app2:1.2
+# docker exec -it test-api-app-ng-serve sh
