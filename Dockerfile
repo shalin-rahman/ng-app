@@ -26,10 +26,14 @@ FROM nginx:alpine  AS build-server
 RUN chmod -R 755 /usr/share/nginx/html
 
 # Copy the build output from the build stage to NGINX's web directory
-COPY --from=build /app/dist/ng-api-app/browser /usr/share/nginx/html/
+COPY --from=build /app/dist/ng-api-app /usr/share/nginx/html/
 
 # Expose port 80 to the host
 EXPOSE 80
 
 # Start NGINX
 CMD ["nginx", "-g", "daemon off;"]
+
+# docker build -t ng-api-app:1.1 .
+# docker run -d -p 8080:80 --name test-api-app ng-api-app:1.1
+# docker exec -it test-api-app sh
